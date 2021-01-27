@@ -113,7 +113,7 @@
         submitIng: true,
         submitSuccess: false,
         submitError: false,
-        coverAll: false,  //底部框
+        coverAll:false,  //底部框
         svgbarNum: 0,
         riskMonitoring: [],  //风险监测结果
         phaseNoUserID: true,
@@ -489,7 +489,7 @@
           }
         }
         .contract-button{
-          margin-top: 154rpx;
+          margin-top:60rpx;
         } 
       }
     }
