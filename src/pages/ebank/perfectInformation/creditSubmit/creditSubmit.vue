@@ -306,7 +306,15 @@ export default {
         sdata,
         "GET",
         function(res) {
-          //that.loaninvestigation(that.applyNoVal);
+          if(res.data.data.returnCode == 'Failed'){
+            yu.showToast({
+              title: res.data.data.returnDesc,
+              icon: 'none',
+              duration: 3000
+            });
+            return;
+          }
+          that.loaninvestigation(that.applyNoVal);
           let userID = that.userInfor.loginCode;
           let orgID=that.userInfor.orgId;
           let data = {

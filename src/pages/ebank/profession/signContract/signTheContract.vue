@@ -907,6 +907,8 @@
                     data,
                     "post",
                     res => {
+                        this.houseContractNo="";
+                        this.houseContractTwo="";
                         console.log(res, "押品信息补录一手房");
                         this.messageData = res.data.data.returnCode;
                         setTimeout(() => {
@@ -1033,6 +1035,14 @@
                     "post",
                     res => {
                         console.log(res, "押品信息补录二手房");
+                        this.realEstateNo="";
+                        this.warrantNumber="";
+                        this.bindDateChange="";
+                        this.certificateRegistration="";
+                        console.log(this.realEstateNo,"不动产证编号")
+                        console.log(this.warrantNumber,"2")
+                        console.log(this.bindDateChange,"3")
+                        console.log(this.certificateRegistration,"4")
                         setTimeout(() => {
                             this.isDisable = false;
                         }, 1000);
@@ -1221,7 +1231,7 @@
         z-index: 99;
         .cover-submit {
             width: 100%;
-            height: 648rpx;
+            height:720rpx;
             background: #ffffff;
             border-radius: 20rpx 20rpx 0 0;
             position: absolute;
@@ -1244,7 +1254,6 @@
                 }
             }
             .contract-ul {
-                margin-top: 80rpx;
                 .contract-li {
                     display: flex;
                     justify-content: space-between;
@@ -1257,14 +1266,11 @@
                     .iptcontract {
                         text-align: right;
                     }
+                    picker{
+                        width: 60%;
+                    }
                     .choose-arrow {
-                        width: 15rpx;
-                        height: 26rpx;
-                        position: absolute;
-                        top: 50%;
-                        right: 32rpx;
-                        margin-top: -30rpx;
-                        margin-right: -7.5rpx;
+                       margin-left: -70rpx;
                     }
                 }
                 .contract-li:last-of-type {
@@ -1272,7 +1278,6 @@
                 }
             }
             .contract-button {
-                margin-top: 100rpx;
                 uni-button {
                     width: 330rpx;
                     box-shadow: 0rpx 10rpx 23rpx 0rpx rgba(59, 134, 247, 0.4);
