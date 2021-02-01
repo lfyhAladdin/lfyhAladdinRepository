@@ -570,16 +570,18 @@
                         }
                         that.personInfor.birthday = resData.bornDate.replace(/\//g, '-');
                         that.personInfor.ermanentAddress = resData.nativeAdd;
-                        if (resData.idexpiry !== "") {
+                        console.log(resData.idexpiry)
+                        if (resData.idexpiry != "") {
                             that.personInfor.date = resData.idexpiry.replace(/\//g, '-');
+                            let dataString = resData.idexpiry.substring(0, 4);
+                            if (dataString == '9999') {
+                                that.maturityDateyBoolean = false;
+                            } else {
+                                that.maturityDateyBoolean = true;
+                                that.personInfor.date = resData.idexpiry.replace(/\//g, '-');
+                            }
                         }
-                        let dataString = resData.idexpiry.substring(0, 4);
-                        if (dataString == '9999') {
-                            that.maturityDateyBoolean = false;
-                        } else {
-                            that.maturityDateyBoolean = true;
-                            that.personInfor.date = resData.idexpiry.replace(/\//g, '-');
-                        }
+
                         var nameArr = resData.formerlyName.split(',');
                         that.personInfor.nameUsedList = [];
                         nameArr.forEach((item, index) => {
