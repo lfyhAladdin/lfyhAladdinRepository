@@ -268,6 +268,7 @@
           console.log('放款流程提交成功结果');
           yu.hideLoading();
           if(res.data.data.returnCode == 'Failed'){
+            this.coverAll = false;
             yu.showToast({
               title: res.data.data.returnDesc,
               icon: 'none',
