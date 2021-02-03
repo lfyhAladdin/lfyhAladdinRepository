@@ -202,6 +202,10 @@ export default {
       this.imgPath_fan_base64 = this.approvalIngList.imgPath_fan_base64;
     }
     //获取身份证信息end
+
+     /*  this.compressImages('./static/images/shuijiao.jpg',1,function(data){
+        console.log(data);
+      });  */
   },
   onShow() {},
   onUnload() {},
@@ -371,7 +375,8 @@ export default {
     //调用方法
     /* 上传影像平台获取批次号   start */
     uploadImg() {
-      if (!this.preventResubmit) {
+      let _this=this;
+      if (!_this.preventResubmit) {
         yu.showModal({
           content: "操作进行中，请稍等",
           showCancel: false,
@@ -384,7 +389,7 @@ export default {
         });
         return;
       }
-      this.preventResubmit = false;
+      _this.preventResubmit = false;
       yu.showLoading();
       yu.showToast({
         icon: "none",
@@ -392,8 +397,8 @@ export default {
         duration: 1500
       });
       if (
-        this.imgPath_zheng_base64 === "" ||
-        this.imgPath_fan_base64 === ""
+        _this.imgPath_zheng_base64 === "" ||
+        _this.imgPath_fan_base64 === ""
       ) {
         yu.showToast({
           icon: "none",
@@ -401,67 +406,79 @@ export default {
           duration: 3000
         });
       }
-      let param = {
-        busiFileTypeList: ["2012060101"],
-        filePartName: "LS_SQZL_P",
-        modelCode: "LS_SQZL",
-        uploadImageInVoList: [
-          {
-            base64Code: this.imgPath_zheng_base64,
-            frontBackFlag: "2",
-            psnTp: "1",
-            idNumber: this.personInfor.idcard
-          },
-          {
-            base64Code: this.imgPath_fan_base64,
-            frontBackFlag: "1",
-            psnTp: "1",
-            idNumber: this.personInfor.idcard
-          }
-        ]
-      };
-      foxsdk.logger.info(param);
-      let posturl = "/api/imagehandle/uploadreturnnoanddate";
-      this.interfaceRequest(
-        posturl,
-        param,
-        "post",
-        (res)=> {
-          yu.hideLoading();
-          this.preventResubmit = true;
-          this.imgBatchNumber = res.data.data.busiSerialNo; //res.data.data.batchId;
-          this.imgFirstUploadTime = res.data.data.busiStartDate; //this.getDate();
-          let e = {
-            fromProductTitle: this.title,
-            imageList: {
-              imageBatchNo: this.imgBatchNumber,
-              upLoadDate: this.imgFirstUploadTime
+      //压缩图片base64code大小  start
+      let zhengcode='';
+      let fancode='';
+      let zhengbase64='data:image/jpeg;base64,' + _this.imgPath_zheng_base64;
+      let fanbase64='data:image/jpeg;base64,' + _this.imgPath_fan_base64;
+      _this.compressImages(zhengbase64,1,function(data){
+        zhengcode=data;
+      }); 
+      _this.compressImages(fanbase64,1,function(res){
+        fancode=res;
+        let param = {
+          busiFileTypeList: ["2012060101"],
+          filePartName: "LS_SQZL_P",
+          modelCode: "LS_SQZL",
+          uploadImageInVoList: [
+            {
+              base64Code: zhengcode,
+              frontBackFlag: "2",
+              psnTp: "1",
+              idNumber: _this.personInfor.idcard
             },
-            businessType2: this.title,
-            businessType: this.productId,
-          };
-          this.approvalIngListReplace(e);
-          foxsdk.logger.info("img");
-          foxsdk.logger.info(res.data.data + "&&&&&" + this.getDate());
-          foxsdk.logger.info(
-            this.imgBatchNumbe + "&&&&&" + this.imgFirstUploadTime
-          );
-          this.submitform(this.imgBatchNumber, this.imgFirstUploadTime);
-        },
-        (err)=> {
-          yu.hideLoading();
-          this.preventResubmit = true;
-          yu.showToast({
-            icon: "none",
-            title: "图片上传失败，返回首页",
-            duration: 3000
-          });
-          setTimeout(function() {
-            yu.switchTab({ url: "/pages/ebank/index/index" });
-          }, 1500);
-          //this.pageJump(this.incomingSuccess);
-        }
-      );
+            {
+              base64Code: fancode,
+              frontBackFlag: "1",
+              psnTp: "1",
+              idNumber: _this.personInfor.idcard
+            }
+          ]
+        };
+        let posturl = "/api/imagehandle/uploadreturnnoanddate";
+        _this.interfaceRequest(
+          posturl,
+          param,
+          "post",
+          (res)=> {
+            yu.hideLoading();
+            _this.preventResubmit = true;
+            _this.imgBatchNumber = res.data.data.busiSerialNo; //res.data.data.batchId;
+            _this.imgFirstUploadTime = res.data.data.busiStartDate; //this.getDate();
+            let e = {
+              fromProductTitle: _this.title,
+              imageList: {
+                imageBatchNo: _this.imgBatchNumber,
+                upLoadDate: _this.imgFirstUploadTime
+              },
+              businessType2: _this.title,
+              businessType: _this.productId,
+            };
+            _this.approvalIngListReplace(e);
+            foxsdk.logger.info("img");
+            foxsdk.logger.info(res.data.data + "&&&&&" + _this.getDate());
+            foxsdk.logger.info(
+              _this.imgBatchNumbe + "&&&&&" + _this.imgFirstUploadTime
+            );
+            _this.submitform(_this.imgBatchNumber, _this.imgFirstUploadTime);
+          },
+          (err)=> {
+            yu.hideLoading();
+            _this.preventResubmit = true;
+            yu.showToast({
+              icon: "none",
+              title: "图片上传失败，返回首页",
+              duration: 3000
+            });
+            setTimeout(function() {
+              yu.switchTab({ url: "/pages/ebank/index/index" });
+            }, 1500);
+            //this.pageJump(this.incomingSuccess);
+          }
+        );
+      }); 
+      //压缩图片base64code大小  end
+      
     },
     /* 上传影像平台获取批次号   end */
     /**身份证识别 */
@@ -478,6 +495,7 @@ export default {
             ret.payload.ImagePath,
             url => {
               this.imgPath_zheng = url;
+              foxsdk.logger.info("路径转换"+url);
               localStorage.setItem("imgPath_zheng", url);
             },
             ret => {
@@ -490,6 +508,14 @@ export default {
               "imgPath_zheng_base64",
               entry.payload.imageBase64
             );
+
+            /* let base64code = entry.payload.imageBase64;
+            let base64='data:image/jpeg;base64,' + base64code;
+            this.compressImages(base64,1,function(data){
+              this.imgPath_zheng_base64=data;
+              foxsdk.logger.info(this.imgPath_zheng_base64);
+              localStorage.setItem( "imgPath_zheng_base64",data);
+            }); */
           });
 
           let e = {
@@ -519,8 +545,20 @@ export default {
               "imgPath_fan_base64",
               entry.payload.imageBase64
             );
+            /* let base64code = entry.payload.imageBase64;
+            let base64='data:image/jpeg;base64,' + base64code;
+            this.compressImages(base64,1,function(data){
+              foxsdk.logger.info('##############################');
+              foxsdk.logger.info(data);
+              foxsdk.logger.info('################################');
+              this.imgPath_fan_base64=data;
+              localStorage.setItem( "imgPath_fan_base64",data);
+            }); */
           });
-
+         /*  this.compressImages(ret.payload.ImagePath,1,function(data){
+            this.imgPath_fan_base64 = data;
+            localStorage.setItem( "imgPath_fan_base64",data);
+          }); */
           let e = {
             imgPath_fan: this.imgPath_fan,
             imgPath_fan_base64: this.imgPath_fan_base64,

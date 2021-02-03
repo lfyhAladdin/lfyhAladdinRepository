@@ -84,7 +84,7 @@ export default {
     },
     // 二维码生成工具
     couponQrCodes() {
-        this.qrcodeUrl="https://boltest2.lccb.com.cn:280/view/order/orderRequest.html?bT="+ this.approvalIngList.fromProductId+"&lC="+ this.userInfor.loginCode+"&oI="+ this.userInfor.orgId;
+        this.qrcodeUrl="https://ald.lccb.com.cn:280/view/order/orderRequest.html?bT="+ this.approvalIngList.fromProductId+"&lC="+ this.userInfor.loginCode+"&oI="+ this.userInfor.orgId;
         this.$nextTick(function () {
         this.qrcodeWidth = this.$refs.qrcodeJS.$el.clientWidth + 'px';
         this.qrcodeHeight = this.$refs.qrcodeJS.$el.clientHeight + 'px';

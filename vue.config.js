@@ -67,7 +67,7 @@ module.exports = {
     // proxy: getProxyConfig(),
     proxy: {
       '/chdcebankapp': {
-        target: 'https://boltest2.lccb.com.cn:280', // 配置反向代理'http://219.143.38.252:18080/yump-mgw/''http://172.16.20.34:7070'
+        target: 'https://ald.lccb.com.cn:280', // 配置反向代理'http://219.143.38.252:18080/yump-mgw/''http://172.16.20.34:7070'
         changeOrigin: true,
         pathRewrite: {
           '^/chdcebankapp': '/chdcebankapp'

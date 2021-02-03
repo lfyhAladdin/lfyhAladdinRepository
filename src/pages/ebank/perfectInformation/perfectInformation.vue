@@ -274,7 +274,7 @@ export default {
     couponQrCodes() {
       let _this=this;
       let applyID=_this.queryApplyInfoList.applyNo;
-      let qrcodeurl="https://boltest2.lccb.com.cn:280/view/creditAuthorization/creditAuthorization.html?applyID="+applyID;
+      let qrcodeurl="https://ald.lccb.com.cn:280/view/creditAuthorization/creditAuthorization.html?applyID="+applyID;
       _this.$nextTick(function () {
         _this.qrcodeWidth = _this.$refs.qrcodeJS.$el.clientWidth + 'px';
         _this.qrcodeHeight = _this.$refs.qrcodeJS.$el.clientHeight + 'px';

@@ -276,9 +276,13 @@ export default {
         sourceType: ['camera','album'], //拍照
         success: function (res) {
           const tempFilePaths = res.tempFilePaths;
-         foxsdk.gallery.imageBase64(tempFilePaths[0], entry => {
+          
+          foxsdk.gallery.imageBase64(tempFilePaths[0], entry => {
             let base64code = entry.payload.imageBase64;
-            _self.uploadImagePost(base64code,_id);//调用上传图片方法
+            let base64='data:image/jpeg;base64,' + base64code;
+            _self.compressImages(base64,1,function(data){
+              _self.uploadImagePost(data,_id);//调用上传图片方法
+            });
           });
           _self.iconcheck = 1;//点击后图片更改状态由0变成1
         },

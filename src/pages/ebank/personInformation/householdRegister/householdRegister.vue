@@ -326,8 +326,6 @@
             });
             foxsdk.gallery.imageBase64(ret.payload.ImagePath, entry => {
               this.IDFrontBase64 = entry.payload.imageBase64;
-              console.log('************');
-              console.log(this.IDFrontBase64)
             });
           }else{
             foxsdk.io.convertLocalFileSystemURL(ret.payload.ImagePath, url => {
@@ -354,60 +352,74 @@
 		  },
       // 调6.6接口，将图片存储到影像平台
       uploadbybacthid(){
-        let data={
-          busiSerialNo: this.busiSerialNoVal,  //业务流水号
-          busiStartDate: this.busiStartDateVal,  //业务日期
-          // batchId: this.batchId,
-          busiFileTypeList: ['2012060101'],
-          filePartName: 'LS_SQZL_P',
-          modelCode: 'LS_SQZL',
-          uploadImageInVoList: [
-            {
-              base64Code: this.IDFrontBase64,
-              frontBackFlag: '2',
-              psnTp: this.psnTp,
-              idNumber: this.personInfor.idcard
-            },
-            {
-              base64Code: this.IDReverseBase64,
-              frontBackFlag: '1',
-              psnTp: this.psnTp,
-              idNumber: this.personInfor.idcard
-            },
-          ]
-        }
-        yu.showLoading();
-        let posturl="/api/imagehandle/uploadbynoanddate";
-        this.interfaceRequest(posturl,data,"post",(res)=>{
-          yu.hideLoading();
-          console.log('*********存储')
-          console.log(res.data.data);
-          if(res.data.data.returnCode == 'Success'){
-            if(this.isJump){
-              //this.pageJump('personInformation/baseInformation/baseInformation?identity='+this.identity);
-              this.queryApplyInfo();
-            }else{
-              this.queryApplyInfoNo();
-              yu.showToast({
-                title: '暂存成功！',
-                image: './static/images/perfectInformation/success.svg',
-                duration: 2000
-              });
-            }
-          }else{
-            this.showToastFun(res.data.data.returnDesc);
+        let _this=this;
+        //压缩图片base64code大小  start
+        let zhengcode='';
+        let fancode='';
+        let zhengbase64='data:image/jpeg;base64,' + _this.IDFrontBase64;
+        let fanbase64='data:image/jpeg;base64,' + _this.IDReverseBase64;
+        _this.compressImages(zhengbase64,1,function(data){
+          zhengcode=data;
+        }); 
+        _this.compressImages(fanbase64,1,function(res){
+          fancode=res;
+          let data={
+            busiSerialNo: _this.busiSerialNoVal,  //业务流水号
+            busiStartDate: _this.busiStartDateVal,  //业务日期
+            // batchId: this.batchId,
+            busiFileTypeList: ['2012060101'],
+            filePartName: 'LS_SQZL_P',
+            modelCode: 'LS_SQZL',
+            uploadImageInVoList: [
+              {
+                base64Code: zhengcode,
+                frontBackFlag: '2',
+                psnTp: _this.psnTp,
+                idNumber: _this.personInfor.idcard
+              },
+              {
+                base64Code: fancode,
+                frontBackFlag: '1',
+                psnTp: _this.psnTp,
+                idNumber: _this.personInfor.idcard
+              },
+            ]
           }
-        
-        },(err)=>{
-          yu.hideLoading();
-          console.log('*********存储')
-          console.log(err);
-          this.showToastFun('6.6影像出现问题，请联系管理员');
-          setTimeout(()=>{
-            this.pageJump('personInformation/personInformation')
-          },3100);
+          yu.showLoading();
+          let posturl="/api/imagehandle/uploadbynoanddate";
+          _this.interfaceRequest(posturl,data,"post",(res)=>{
+            yu.hideLoading();
+            console.log('*********存储')
+            console.log(res.data.data);
+            if(res.data.data.returnCode == 'Success'){
+              if(_this.isJump){
+                //this.pageJump('personInformation/baseInformation/baseInformation?identity='+this.identity);
+                _this.queryApplyInfo();
+              }else{
+                _this.queryApplyInfoNo();
+                yu.showToast({
+                  title: '暂存成功！',
+                  image: './static/images/perfectInformation/success.svg',
+                  duration: 2000
+                });
+              }
+            }else{
+              _this.showToastFun(res.data.data.returnDesc);
+            }
           
-        });
+          },(err)=>{
+            yu.hideLoading();
+            console.log('*********存储')
+            console.log(err);
+            _this.showToastFun('6.6影像出现问题，请联系管理员');
+            setTimeout(()=>{
+              _this.pageJump('personInformation/personInformation')
+            },3100);
+            
+          });
+        }); 
+        //压缩图片base64code大小  end
+        
       },
       // 6.8接口 下载影像信息
       downloadbybatchid(){

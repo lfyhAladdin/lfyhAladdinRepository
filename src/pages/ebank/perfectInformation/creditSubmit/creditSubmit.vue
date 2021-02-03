@@ -314,7 +314,7 @@ export default {
             });
             return;
           }
-          that.loaninvestigation(that.applyNoVal);
+          //that.loaninvestigation(that.applyNoVal);
           let userID = that.userInfor.loginCode;
           let orgID=that.userInfor.orgId;
           let data = {
